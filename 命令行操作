@@ -22,7 +22,8 @@ rm -r +目录名  //-r表示递归操作
 四、创建文件
 touch a.text  //若文件存在，则会修改文件的时间 
 ra a.text //删除文件
-
+cp a.txt b.txt //将 a.txt 的内容拷贝到 b.txt 里面，若b.txt不存在，则就创建一个，存在的话，就会被覆盖
+cp dir1 dir2 -r //将目录dir1拷贝到dir2中，规则如上条一样 -r表示是递归操作
 
 
 
