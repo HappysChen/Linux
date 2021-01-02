@@ -117,8 +117,39 @@ which可以查看命令的所在目录
    用ifconfig可以查系统IP地址，Windows下用ipconfig，再用ping IP地址，可以与连接的电脑进行通信
    用nslookup 网站域名 可以查看该网站的IP地址以及服务器的IP地址。
          
+ 十二、ftp服务器
+     服务器端：
+     1）修改配置文件--如何修改配置文件
+     2) 重启服务  ---什么命令能够重启服务
+   1、服务器搭配
+      安装了vsftpd之后，需要修改为：（用命令(cd /etc)进入/etc中，再输入sudo gedit vsftpd.conf）
+         anonymous_enable=YES
+         local_enable=YES
+         write_enable=YES
+         local_umask=022
+         anon_upload_enable=YES
+       然后重启：sudo service vsftpd restart
+   2、客户端：
+      1】实名用户登录
+      2】ftp + Ip(server)
+         输入用户名（server）
+         输入密码
          
+         文件的上传和下载
+             文件的上传：put file(文件名)
+             文件的下载：get file
+             不允许操作目录,想操作目录的话，--打包tar/rar/zip
+    3、匿名通话登录
+         ftp + serverIP
+         用户名：anonymous(其他的也可以)
+         密码：直接回车（为空密码）
+          
+         不允许匿名用户在任意目录直接切换
+         只能在一个制定的目录范围内工作
+         需要用ftp服务器创建一个匿名用户的目录--匿名用户的根目录
          
+             
+      
          
 
 
