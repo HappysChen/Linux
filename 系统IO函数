@@ -1,0 +1,60 @@
+  系统IO函数
+一、 概念
+   文件描述符
+   PCB
+   c库函数的IO缓冲区
+
+系统调用：
+  LINux内核提供了一组用户进程与内核进行交互的接口对文件和设备进行访问控制，这些接口被称为系统调用。
+系统调用对于应用程序最大的作用在于：
+  以同意的形式：为应用程序提供了一组文件访问的抽象接口，因共用程序不需要关心文件的具体类型，也不用关心其内部实现细节。 
+
+常用的系统调用IO函数有：
+另外介绍：Linux系统中的man是系统内部分页手册,可用于查询函数在那一页
+
+二、open
+   open用于创建一个新文件或打开一个已有文件，返回一个非负的文件描述符fd。
+   0、1、2为系统预定义的文件描述符，分别代表STDIN_FILENO、STDOUT_FILENO、STDERR_FILENO。
+  
+  flags参数一般在O_RDONLY、O_WRONLY和O_RDWR中选择指定一个，还可以根据需要或上以下常值：
+    O_CREAT：若文件不存在则创建它，此时需要第三个参数mode，mode可设的值及含义如下图所示。
+    O_APPEND：每次写时都追加到文件的尾端
+    O_NONBLOCK：如果pathname对应的是FIFO、块特殊文件或字符特殊文件，则该命令使open操作及后续IO操作设定为非阻塞模式
+    
+   打开方式：
+    必选项： flags
+       O_RDONLY  只读
+       O_WROMLY  只写
+       O_RDWR    读写
+    可选项：
+       O_CREAT
+       O_TRUNC 
+       O_EXCL
+       O_APPEND
+       
+   #include<sys/types.h>
+   #include<sys/stat.h>
+   #include<fcntl.h>
+   //成功返回文件描述符，失败返回-1
+   int open(const char *pathname, int flags,... /* mode_t mode */);
+   
+   
+       
+       
+ 三、read
+    返回值
+    
+ 四、write
+    返回值
+    
+ 五、lseek
+    返回值
+  
+ 六、close
+    返回值
+   
+ 
+       
+   
+   
+   
