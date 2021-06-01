@@ -51,17 +51,57 @@
        
        
  三、read
-    返回值
+    read用于从打开文件中读数据。
+
+#include <unistd.h>
+
+//成功返回读到的字节数；若读到文件尾则返回0；失败返回-1
+ssize_t read(int fd, void *buf, size_t count);
+read操作从文件的当前偏移量处开始，在成功返回之前，文件偏移量将增加实际读到的字节数。
+有几种情况可能导致实际读到的字节数少于要求读的字节数：
+
+读普通文件时，在读到要求字节数之前就到达了文件尾。例如，离文件尾还有30字节，要求读100字节，则read返回30，下次在调用read时会直接返回0
+从网络读时，网络中的缓冲机制可能造成返回值少于要求读的字节数，解决办法在网络编程专题中再讲
     
  四、write
-    返回值
+
+write用于向文件写入数据。
+
+#include <unistd.h>
+
+//成功返回写入的字节数，失败返回-1
+ssize_t write(int fd, const void *buf, size_t count);
+write的返回值通常与参数count相同，否则表示出错。
+对于普通文件，write操作从文件的当前偏移量处开始
+若指定了O_APPEND选项，则每次写之前先将文件偏移量设置到文件尾
+成功写入之后，文件偏移量增加实际写的字节数。
     
  五、lseek
-    返回值
+   lseek用于设置打开文件的偏移量。
+
+#include <sys/types.h>
+#include <unistd.h>
+
+//成功返回新的文件偏移量，失败返回-1
+off_t lseek(int fd, off_t offset, int whence);
+对offset的解释取决于whence的值：
+
+若whence == SEEK_SET，则将文件偏移量设为距文件开头offset个字节，此时offset必须为非负
+若whence == SEEK_CUR，则将文件偏移量设为当前值 + offset，此时offset可正可负
+若whence == SEEK_END，则将文件偏移量设为文件长度 + offset，此时offset可正可负
+注意：
+
+lseek仅将新的文件偏移量记录在内核中，它并不引起任何IO操作，因此它不是系统调用IO，但该偏移量会用于下一次read/write操作
+管道、FIFO和套接字不支持设置文件偏移量，不能对其调用lseek
   
  六、close
-    返回值
-   
+close用于关闭一个已打开文件。
+
+#include <unistd.h>
+
+//成功返回0，失败返回-1
+int close(int fd);
+进程终止时，内核会自动关闭它所有的打开文件，应用程序经常利用这一点而不显式关闭文件。
  
        
    
