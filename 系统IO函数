@@ -51,7 +51,7 @@
        
        
  三、read
-    read用于从打开文件中读数据。
+read用于从打开文件中读数据。
 
 #include <unistd.h>
 
@@ -76,8 +76,55 @@ write的返回值通常与参数count相同，否则表示出错。
 若指定了O_APPEND选项，则每次写之前先将文件偏移量设置到文件尾
 成功写入之后，文件偏移量增加实际写的字节数。
     
+ #include<stdio.h>
+ #include<stdlib.h>
+ #include<sys/stat.h>
+ #include<sys/types.h>
+ #include<unistd.h>
+ #include<fcntl.h>
+ 
+ int main()
+ {
+   //打开已经存在的文件
+   int fd = open("test.sh",O_RDONLY);
+   if(fd == -1)
+   {
+     perror("read file");
+     exit(1);
+   }
+   //创建一个新的文件
+   int fd1=open("myword",O_CREAT|O_WRONLY,0664);
+   if(fd1 == -1)
+   {
+     perror("create file");
+     exit(1);
+   }
+   //read file 
+   char buf[2048]={0};
+   int count = read(fd,buf,seizeof(buf));
+   if(count ==-1)  //读取失败
+   {
+    perror("read");
+    exit(1);
+   }
+   //读取成功
+   //写入另一个文件
+   while(count) //循环读取
+   {
+   //数据写入新文件
+    int ret = write(fd1,buf,count);
+    printf("write bytes: %d\n",count);
+    count = read(fd,buf,seizeof(buf));
+   }
+   
+   close (fd);
+   close(fd1);
+ }
+ 
+    
+    
  五、lseek
-   lseek用于设置打开文件的偏移量。
+ lseek用于设置打开文件的偏移量。
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -93,6 +140,35 @@ off_t lseek(int fd, off_t offset, int whence);
 
 lseek仅将新的文件偏移量记录在内核中，它并不引起任何IO操作，因此它不是系统调用IO，但该偏移量会用于下一次read/write操作
 管道、FIFO和套接字不支持设置文件偏移量，不能对其调用lseek
+  
+   #include<stdio.h>
+ #include<stdlib.h>
+ #include<sys/stat.h>
+ #include<sys/types.h>
+ #include<unistd.h>
+ #include<fcntl.h>
+ 
+ int main()
+ {
+   //打开已经存在的文件
+   int fd = open("test.sh",O_RDONLY);
+   if(fd == -1)
+   {
+     perror("read file");
+     exit(1);
+   }
+   //将指针指向文件的末尾
+   int ret =lseek(fd,0,SEEK_END);
+   printf("return value %d \n",ret);
+   //文件拓展
+   ret =lseek(fd,2000,SEEK_END); //在文件第2000处拓展
+   printf("return value  %d\n",ret);
+   //还要进行写操作
+   write(fd,"a",1);
+   close(fd);
+   return 0;
+   
+  }
   
  六、close
 close用于关闭一个已打开文件。
