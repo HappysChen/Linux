@@ -12,7 +12,7 @@
 常用的系统调用IO函数有：
 另外介绍：Linux系统中的man是系统内部分页手册,可用于查询函数在那一页
 
-二、open
+1、open
    open用于创建一个新文件或打开一个已有文件，返回一个非负的文件描述符fd。
    0、1、2为系统预定义的文件描述符，分别代表STDIN_FILENO、STDOUT_FILENO、STDERR_FILENO。
   
@@ -50,7 +50,7 @@
    
        
        
- 三、read
+ 2、read
 read用于从打开文件中读数据。
 
 #include <unistd.h>
@@ -63,7 +63,7 @@ read操作从文件的当前偏移量处开始，在成功返回之前，文件�
 读普通文件时，在读到要求字节数之前就到达了文件尾。例如，离文件尾还有30字节，要求读100字节，则read返回30，下次在调用read时会直接返回0
 从网络读时，网络中的缓冲机制可能造成返回值少于要求读的字节数，解决办法在网络编程专题中再讲
     
- 四、write
+ 4、write
 
 write用于向文件写入数据。
 
@@ -121,9 +121,8 @@ write的返回值通常与参数count相同，否则表示出错。
    close(fd1);
  }
  
-    
-    
- 五、lseek
+      
+ 4、lseek
  lseek用于设置打开文件的偏移量。
 
 #include <sys/types.h>
@@ -170,7 +169,7 @@ lseek仅将新的文件偏移量记录在内核中，它并不引起任何IO操�
    
   }
   
- 六、close
+ 5、close
 close用于关闭一个已打开文件。
 
 #include <unistd.h>
@@ -178,7 +177,83 @@ close用于关闭一个已打开文件。
 //成功返回0，失败返回-1
 int close(int fd);
 进程终止时，内核会自动关闭它所有的打开文件，应用程序经常利用这一点而不显式关闭文件。
- 
+
+6、stat函数
+
+函数原型:  
+
+int stat(const char *file_name, struct stat *buf)// 通过文件名filename获取文件信息，并保存在buf所指的结构体stat中
+
+int fstat(int filedes, struct stat *buf);//通过文件描述符获取文件对应的属性。
+
+int lstat(const char *restrict pathname, struct stat *restrict buf);//连接文件描述命，获取文件属性。
+
+返回值：成功返回0，失败返回-1，并且设置error的值
+
+error错误代码:
+
+ENOENT 参数file_name指定的文件不存在
+
+ENOTDIR 路径中的目录存在但却非真正的目录
+
+ELOOP 欲打开的文件有过多符号连接问题，上限为16符号连接
+
+EFAULT 参数buf为无效指针，指向无法存在的内存空间
+
+EACCESS 存取文件时被拒绝
+
+ENOMEM 核心内存不足
+
+ENAMETOOLONG   参数file_name的路径名称太长
+
+给定一个pathname，stat函数返回一个与此命名文件有关的信息结构，fstat函数获得已在描述符filedes上打开的文件的有关信息。
+lstat函数类似于stat，但是当命名的文件是一个符号连接时，lstat返回该符号连接的有关信息，而不是由该符号连接引用的文件的信息。
+
+struct stat结构体成员：
+
+struct stat {
+dev_t st_dev; //文件的设备编号
+
+ino_t st_ino; //节点
+
+mode_t st_mode; //文件的类型和存取的权限2个btye：文件类型、特殊权限位、文件所有者、文件所有组、其他人
+
+nlink_t st_nlink; //连到该文件的硬连接数目，刚建立的文件值为1
+
+uid_t st_uid; //用户ID
+
+gid_t st_gid; //组ID
+
+dev_t st_rdev; //(设备类型)若此文件为设备文件，则为其设备编号
+
+off_t st_size; //文件字节数(文件大小)
+
+unsigned long st_blksize;   //块大小(文件系统的I/O 缓冲区大小)
+
+unsigned long st_blocks; //块数
+
+time_t st_atime; //最后一次访问时间
+
+time_t st_mtime; //指最近修改文件内容的时间
+
+time_t st_ctime; //指最近改动Inoed的时间
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
        
    
    
