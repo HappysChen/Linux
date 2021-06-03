@@ -178,7 +178,7 @@ close用于关闭一个已打开文件。
 int close(int fd);
 进程终止时，内核会自动关闭它所有的打开文件，应用程序经常利用这一点而不显式关闭文件。
 
-6、stat函数
+6、stat函数 --软链接
 
 函数原型:  
 
@@ -240,9 +240,48 @@ time_t st_ctime; //指最近改动Inoed的时间
 
 };
 
+7、链接函数
+  1）、link 函数
+    作用：创建一个硬链接
+    原型：int link(const char* oldpath, const char* newpath);
+  2)、symlink 函数
+    作用：创建一个软链接
+  3）、readlink 函数
+    作用：读取连接对应的文件名，不是读内容
+  4）、UNlink函数
+    作用：删除一个文件的目录项并减少它的链接数，若成功则返回0，否则返回-1，错误存在于error中
+         如果想通过调用这个函数来成功删除文件，你就必须拥有这个文件的所属目录的写和执行权限
+         有时候可以将一个临时文件删除掉
+     使用：如果是硬链接，硬链接数减1，当减为0时，释放数据块和iNode
+           如果是符号链接，删除符号链接
+           如果是文件硬链接数为0，但有进程已打开该文件，并持有文件描述符，则等该进程关闭后该文件时，kernel才真正去删除该文件，是自动删除
 
+8、rename 函数
+   作用：文件重命名
+   头文件：stdio.h
+   函数原型：int rename(const char *oldpath, const char* newpath );
 
-
+9、目录操作函数
+   1）chdir 函数
+      作用：修改当前进程的路径
+      原型：int chdir(const char *path);
+   2)getcwd 函数
+      作用：获取当前进程工作目录
+      函数原型：char *getcwd(char *buf,size_t size);
+   3) mkdir 函数
+      作用：创建目录
+      注意：创建目录需要有执行权限，否则无法进入目录
+      函数原型： int mkdir(const char *pathname, mode_t mode);
+   4) rmdir函数
+      作用：删除一个空目录
+      函数原型： int mkdir(const char *pathname);
+   5)opendir 函数
+      作用：打开一个目录
+      函数原型：DIR *opendir (const char*name);
+      返回值：DIR结构指针，该结构是一个内部结构，保存所打开的目录信息，作用类似于FILE结构
+      函数出错返回NULL
+   
+      
 
 
 
