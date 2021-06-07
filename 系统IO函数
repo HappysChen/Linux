@@ -280,12 +280,39 @@ time_t st_ctime; //指最近改动Inoed的时间
       函数原型：DIR *opendir (const char*name);
       返回值：DIR结构指针，该结构是一个内部结构，保存所打开的目录信息，作用类似于FILE结构
       函数出错返回NULL
-   
-      
+   6)readdir 函数
+      作用：读目录
+      函数原型：struct dirent *readdir(DIR *dirp)
+      返回值：
+            返回一条记录项
+            struct dirent
+            {
+              ino_t d_ino;     //此目录进入点的iNode
+              ff_t d_off;         //目录文件开头致辞目录进入点的位移
+              signed short int d_reclen; //d_name 的长度 不包括NULL字符
+              unsigned char d_type ;   //所指文件类型
+              char d_name[256];      //文件名
+            }
+          其中 d_type
+           {
+             DT_DIR --目录
+             DT_BLK --块设备
+             DT_CHR --字符设备
+             DT_LNK --软链接
+             DT_FIFO --管道
+             DT_REG  --普通文件
+             DT_SOCK --套接字
+             DT_UNKNOWN --未知
+           }
 
+10、文件描述符的复制
+   dup()
+   dup2()
 
-
-
+11、fcntl 函数
+  改变已经打开的文件的属性
+  打开文件的时候：只读
+     修改文件的： 
 
 
 
