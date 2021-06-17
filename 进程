@@ -54,9 +54,32 @@ CPU和MMU：
     unsetenv(); //删除环境变量
     
  4、进程控制
-    
-    
-    
+    1）获取进程
+       每个进程都一个唯一的ID（PID），getpid函数返回调用进程的PID，getppid函数返回它的父进程的PID（创建调用进程的进程）
+       头文件：#include<sys/types.h>
+               #include<unistd.h>
+               pid_t getpid(void);
+               pid_t getppid(void);
+         
+    2)创建进程
+    父进程可以调用fork()创建一个新的运行子进程。
+      #include<sys/types.h>
+      #include<unistd.h>
+      
+      pid_t fork(void);
+      
+     创建循环进程用 for(int i=0;i<N;i++)
+                     pid =fork();
+       会达不到效果。
+         
+     
+               
+               
+         
+               
+               
+               
+               
 
 
 
