@@ -307,7 +307,8 @@ time_t st_ctime; //指最近改动Inoed的时间
 
 10、文件描述符的复制
    dup()
-   dup2()
+   dup2() //可以进行文件指针重定向，例如：dup2(3,1); 表示 1代表的文件指向3代表的文件区
+   再如：dup2(fd,STDOUT_FILENO);// STDOUT_FILENO 表示宏定义
 
 11、fcntl 函数
   改变已经打开的文件的属性
