@@ -257,15 +257,27 @@ CPU和MMU：
                  PROT_READ:这个区域内的页面可读
                  PROT_WRITE:这个区域内的页面可写
                  PROT_NONE:这个区域内的页面不能被访问
-          flag : 由描述被映射对象类型的位组成。标志位参数（常用于设定更新物理区域、设置共享、创建匿名映射区）
-                 MAP_SHARED:会将映射区所做的操作反映到物理设备（磁盘）上。
-                 MAP_PRIVATE:映射区所做的修改不会反映到物理设备。
+          flags : 由描述被映射对象类型的位组成。标志位参数（常用于设定更新物理区域、设置共享、创建匿名映射区）
+                 MAP_SHARED:会将映射区所做的操作反映到物理设备（磁盘）上。(共享对象）
+                 MAP_PRIVATE:映射区所做的修改不会反映到物理设备。 被映射的对象是一个私有的、写时复制的对象
+                 MAP_ANON标记位，被映射的对象是一个匿名对象，相应的虚拟页面是一个请求二进制零的。
           fd  :  用来建立映射区的文件描述符
           offset:映射文件的偏移(4K的整数倍）
-          
-          
-          
-          
+      **认识一个新函数：
+          ftruncate（）函数会将参数fd指定的文件大小改为参数length指定的大小
+          定义函数 int ftruncate(int fd,off_t length);
+          ftruncate()会将参数fd指定的文件大小改为参数length指定的大小。
+          参数fd为已打开的文件描述词，而且必须是以写入模式打开的文件。
+          如果原来的文件大小比参数length大，则超过的部分会被删去。
+          返回值
+          执行成功则返回0，失败返回-1，错误原因存于errno。
+      
+      munman函数 删除虚拟内存的区域
+        #include<unistd.h>
+        #include<sys/mman.h>
+        
+        int munmap(void *start ,size_t length) ; munmap 函数从删除从虚拟内存start开始的，由接下来length字节组成的区域。接下来对已删除区域的引用会导致段错误。
+         
                  
        
        
