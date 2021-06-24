@@ -305,11 +305,13 @@ CPU和MMU：
         MAP_SHARED  :（共享映射） 父子进程共享映射区
   
   匿名映射：
-     flags设置成 MAP_ANON标记位，被映射的对象是一个匿名对象，相应的虚拟页面是一个请求二进制零的。
-  
-    
-    
-    
+     flags设置成 MAP_ANON或MAP_ANONYMOUS标记位，被映射的对象是一个匿名对象，相应的虚拟页面是一个请求二进制零的。
+     同时，设置的映射区域大小不受限制，而且也不需要文件句柄。但也可以需要
+     可以用一下方法创建匿名映射区：
+      int fd =open ("temp",O_RDWR); //打开文件
+      int* p=(int *)mmap(NULL, size, PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANON,fd, 0);
+      或者： p = (int *)mmap(NULL,size , PROT_READ | PROT_WRITE,MAP_SHARED|MAP_ANON,-1,0);
+     
     
     
        
