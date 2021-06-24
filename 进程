@@ -312,7 +312,10 @@ CPU和MMU：
       int* p=(int *)mmap(NULL, size, PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANON,fd, 0);
       或者： p = (int *)mmap(NULL,size , PROT_READ | PROT_WRITE,MAP_SHARED|MAP_ANON,-1,0);
      
-    
+ 非血缘关系mmap通信;
+     使用同一文件创建映射区
+     指定MAP_SHARED
+     可多读端，多写端
     
        
        
