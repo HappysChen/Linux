@@ -410,7 +410,23 @@ CPU和MMU：
      alarm 函数安排内核在secs秒后发送一个SIGALRM信号
      每个进程有且仅有一个定时器。
      
-     <3>进程组
+     <3>、setitimer()函数
+      #include<unistd.h>
+      现在的系统中很多程序不再使用alarm调用，而是使用setitimer调用来设置定时器，用getitimer来得到定时器的状态，
+
+      这两个调用的声明格式如下：
+
+      #include <sys/time.h>
+      int getitimer(int which, struct itimerval *curr_value);
+      int setitimer(int which, const struct itimerval *new_value,struct itimerval *old_value);
+     参数:
+
+      第一个参数which指定定时器类型
+      第二个参数是结构itimerval的一个实例，结构itimerval形式
+      第三个参数可不做处理。
+      返回值:成功返回0失败返回-1
+     
+     <4>进程组
       #include<unistd.h>
       pid_t getpgrp(void); 
         返回：若成功则为0，若错误则为-1
@@ -420,7 +436,7 @@ CPU和MMU：
       int setpgid(pid_t pid, pid_t pgid);
          返回：若成功则为0，若出错则为-1
       参数：pid为0，使用当前的pid,若pgid为0，则用pid指定的进程的PID作为进程组ID。
-     
+      
      
      
      
