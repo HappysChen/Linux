@@ -425,7 +425,15 @@ CPU和MMU：
       第二个参数是结构itimerval的一个实例，结构itimerval形式
       第三个参数可不做处理。
       返回值:成功返回0失败返回-1
-     
+     例：
+      struct itimerval it,idot;
+      it.it_value.tv_sec= sec;// 设置定时时间，从第几秒开始发送信号
+      it.it_value.tv_usec = 0;
+      it.it_interval.tv_sec=0; // 每隔多少秒开始发送信号
+      it.it_interval.tv_usec =0;
+      
+      setitimer(ITIMER_REAL,&it,%idot); //ITIMER_REAL 表示自然定时时间
+      
      <4>进程组
       #include<unistd.h>
       pid_t getpgrp(void); 
