@@ -445,7 +445,40 @@ CPU和MMU：
          返回：若成功则为0，若出错则为-1
       参数：pid为0，使用当前的pid,若pgid为0，则用pid指定的进程的PID作为进程组ID。
       
-     
-     
+      <5>信号集操作函数
+      sigprocmask函数
+        用来屏蔽信号、接触屏蔽也使用该函数，其本质，读取或修改进程的信号屏蔽字（PCB中）
+        屏蔽信号：知识将信号处理延迟后执行（延至接触屏蔽）；而忽略表示将信号丢处理。
+        int sigprocmask(int how ,const sigset_t *set ,sigset_t *oldset); 成功：0；失败：-1  设置：errno
+        int sigemptyset (sigset_t *set); //初始化set为空集合
+        int sigfillset(sigset_t *set);  //将每个信号添加到set中
+        int sigaddset(sigset_t *set,int signum);   //将信号signum添加到 set中
+        int sigdelset(sigset_t *set,int signum);   //将信号signum删除
+                                     返回：成功：0，失败：-1
+        int sigismember(const sigset_t *set,int signum); //判断signum是否是set的成员
+                                 返回：若是，返回 0 ，否则为-1
+                                 
+        1）函数sigprocmask()                         
+        首先，若oldset是非空指针，那么进程的当前信号屏蔽字通过oldset返回。
+
+        其次，若set是一个非空指针，则参数how指示如何修改当前信号屏蔽字。
+
+        若set是空指针，则不改变该进程的信号屏蔽字，how的值也无意义了。
+
+        下面表格说明了how可选用的值。注意，不能阻塞SIGKILL和SIGSTOP信号。
+
+        How参数    说明
+        SIG_BLOCK:   该进程新的信号屏蔽字是其当前信号屏蔽字和set指向信号集的的并集，set包含了我们希望阻塞的附加信号
+        SIG_UNBLOCK: 该进程新的信号屏蔽字是其当前信号屏蔽字和set指向信号补集的交集，set包含了我们希望解除阻塞的信号
+        SIG_SETMASK：该进程新的信号屏蔽字将被set指向的信号集的值代替              
+                                 
+        2）sigpending()函数
+          #include <signal.h>
+          int sigpending(sigset_t * set);
+          sigpending读取当前进程的未决信号集，通过set参数传出。调用成功则返回0，出错则返回-1。      
+          
+      
+      
+      
      
 
