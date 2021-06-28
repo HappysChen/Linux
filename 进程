@@ -475,10 +475,55 @@ CPU和MMU：
         2）sigpending()函数
           #include <signal.h>
           int sigpending(sigset_t * set);
-          sigpending读取当前进程的未决信号集，通过set参数传出。调用成功则返回0，出错则返回-1。      
+          sigpending读取当前进程的未决信号集，通过set参数传出。调用成功则返回0，出错则返回-1。     
+        
+       3）raise() 函数
+        可以使用函数 raise() 生成信号，该函数带有一个整数信号编号作为参数，语法如下：
+        int raise (signal sig);
+        在这里，sig 是要发送的信号的编号，这些信号包括：SIGINT、SIGABRT、SIGFPE、SIGILL、SIGSEGV、SIGTERM、SIGHUP。 
+     
+      4） sigaction函数的功能是检查或修改与指定信号相关联的处理动作（可同时两种操作）
+
+         int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);
+         signum参数指出要捕获的信号类型，act参数指定新的信号处理方式，oldact参数输出先前信号的处理方式（如果不为NULL的话）
+         struct sigaction结构体介绍
+
+        struct sigaction {
+            void (*sa_handler)(int);
+            void (*sa_sigaction)(int, siginfo_t *, void *);
+            sigset_t sa_mask;
+            int sa_flags;
+            void (*sa_restorer)(void);
+        }
+        sa_handler此参数和signal()的参数handler相同，代表新的信号处理函数
+        sa_mask 用来设置在处理该信号时暂时将sa_mask 指定的信号集搁置
+        sa_flags 用来设置信号处理的其他相关操作，下列的数值可用。 
+        SA_RESETHAND：当调用信号处理函数时，将信号的处理函数重置为缺省值SIG_DFL
+        SA_RESTART：如果信号中断了进程的某个系统调用，则系统自动启动该系统调用
+        SA_NODEFER ：一般情况下， 当信号处理函数运行时，内核将阻塞该给定信号。但是如果设置了 SA_NODEFER标记， 那么在该信号处理函数运行时，内核将不会阻塞该信号
           
-      
-      
-      
+      5）signal() 函数
+        C++ 信号处理库提供了 signal 函数，用来捕获突发事件。以下是 signal() 函数的语法
+        signal(registered signal, signal handler)
+        第一个参数是一个整数，代表了信号的编号；第二个参数是一个指向信号处理函数的指针。 handler是一个函数名。
+        signal函数用来注册信号，以及信号处理函数。
+  
+       应用sigaction函数 来包装signal函数
+        handler_t 8Signal( int signum，handler_t *handler)
+       {
+         struct sigaction action,old_action;
+         
+         action.sa_handler = handler;
+         sigemptyset(&action.sa_mask); // 只有处理程序当前正在处理的那种类型的信号被阻塞
+         action.sa_flags = SA——RESTART；
+         
+         if(sigacttion(signum,&action,&old.action)<0)
+             perror("Signal error");
+         return (old_action.sa_handler);
+        }
+       
+       
+  
+  
      
 
