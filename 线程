@@ -35,12 +35,49 @@
   5、线程优、缺点  百度
   
   6、线程控制函数
-     
+    1）创建子线程
+    #include<pthread.h>
+    创建用户级线程：
+     int pthread_create(pthread_t * thread, const pthread_attr_t * attr, void *(*start_routine)(void *), void *arg); //创建一个线程 attr为函数名
+          成功：0；失败：error number 
+     参数：
+       pthread_t: 在 linux 中，typedef unsigned long int pthread_t
+       参数1：传出参数，保存系统为我们分配好的线程ID
+       参数2：通常为NULL，表示使用线程默认属性。若想使用具体属性也可以修改该参数
+       参数3：函数指针，指向线程主函数（线程体），该函数运行结束，则线程结束
+       参数4：线程主函数执行期间所使用的参数。
        
-  
-  
-  
-  
+    返回当前用户级线程的线程标识符：
+     pthread_t pthread_self(void);  
+    2）创建循环线程
+       int N,i;
+       pthread_t pth;
+     
+     void func(void *arg)
+      { 
+       //还可以实现其他功能
+        int i= (int)arg;
+        printf("%dth pthread id = %lu,pid = %d\n",i+1,pthread_self(),getpid());
+        //sleep();
+        return NULL;
+      }
+       
+       for (i = 0;i<N;i++)
+        {
+          int ret = pthread_create(&pth,NULL,func, (void *)i); //func为函数名， (void *)i 不是(void*)&i,传入地址的话，在函数func()中，打印出来的是父线程中i那个的地址所存的值
+          if(ret!=0)
+          { 
+           fprintf(stdre,"pthread create fail,id is= %s\n",strerror(ret));
+           exit(1);
+          }
+        }
+     3)、线程共享全局变量
+       
+     4）、线程退出
+       void pthread_exit(void *retval);将调用该函数的线程退出
+       return；返回到调用者那里去
+       exit;  将进程退出
+      
   
   
   
