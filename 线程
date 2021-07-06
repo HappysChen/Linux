@@ -78,6 +78,43 @@
        return；返回到调用者那里去
        exit;  将进程退出
       
+  7、pthread_join()函数
+       pthread_join使一个线程等待另一个线程结束。
+　　代码中如果没有pthread_join；主线程会很快结束从而使整个进程结束，从而使创建的线程没有机会开始执行就结束了。加入pthread_join后，主线程会一直等待直到等待的线程结束自己才结束，使创建的线程有机会执行。
+　　所有线程都有一个线程号，也就是threadid，其类型为pthread_t。 通过调用pthread_self()函数可以获得自身的线程号。
+　　如果你的主线程，也就是main函数执行的那个线程，在你其他线程退出之前就已经退出，那么带来的bug则不可估量。通过pthread_join函数会让主线程阻塞，直到所有线程都已经退出。
+　　int pthread_join(pthread_t thread, void **value_ptr);
+    thread：等待退出线程的线程号。
+    value_ptr：退出线程的返回值。
+ 8、pthread_detach()函数
+     pthread_detach()函数使线程进行分离，并自己结束，自动清理系统线程
+    pthread_attr_t  attr;
+　　pthread_attr_init(&attr);
+　　pthread_attr_setdetachstate(&attr,  PTHREAD_CREATE_DETACHED);
+　　pthread_create(&pthreadid,  &attr,  myprocess,  &arg);
+ 警告：
+　　在线程设置为joinable后，可以调用pthread_detach()使之成为detached。但是相反的操作则不可以。还有，如果线程已经调用pthread_join()后，则再调用pthread_detach()则不会有任何效果。
+  9、pthread_cancel()函数
+    线程可以通过自身执行结束来结束，也可以通过调用pthread_exit()来结束线程的执行。另外，线程甲可以被线程乙被动结束。这个通过调用pthread_cancel()来达到目的。
+int pthread_cancel(pthread_t thread);
+函数调用成功返回0。
+    线程也可以自己取消，通过设置一个取消点
+ 取消点
+根据POSIX标准，pthread_join()、 pthread_testcancel()、pthread_cond_wait()、 pthread_cond_timedwait()、sem_wait()、sigwait()等函数以及read()、write()等会引起阻塞的系统调用都是Cancelation-point，
+而其他pthread函数都不会引起Cancelation动作。但是pthread_cancel的手册页声称，由于LinuxThread库与C库结合得不好，因而目前C库函数都不是Cancelation-point；但CANCEL信号会使线程从阻塞的系统调用中退出，并置EINTR错误码，
+因此可以在需要作为Cancelation-point的系统调用前后调用pthread_testcancel()，从而达到POSIX标准所要求的目标，即如下代码段：   
+pthread_testcancel();   
+retcode = read(fd, buffer,length);   
+pthread_testcancel();
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
