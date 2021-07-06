@@ -100,13 +100,13 @@ int pthread_cancel(pthread_t thread);
 函数调用成功返回0。
     线程也可以自己取消，通过设置一个取消点
  取消点
-根据POSIX标准，pthread_join()、 pthread_testcancel()、pthread_cond_wait()、 pthread_cond_timedwait()、sem_wait()、sigwait()等函数以及read()、write()等会引起阻塞的系统调用都是Cancelation-point，
-而其他pthread函数都不会引起Cancelation动作。但是pthread_cancel的手册页声称，由于LinuxThread库与C库结合得不好，因而目前C库函数都不是Cancelation-point；但CANCEL信号会使线程从阻塞的系统调用中退出，并置EINTR错误码，
-因此可以在需要作为Cancelation-point的系统调用前后调用pthread_testcancel()，从而达到POSIX标准所要求的目标，即如下代码段：   
-pthread_testcancel();   
-retcode = read(fd, buffer,length);   
-pthread_testcancel();
-  
+   根据POSIX标准，pthread_join()、 pthread_testcancel()、pthread_cond_wait()、 pthread_cond_timedwait()、sem_wait()、sigwait()等函数以及read()、write()等会引起阻塞的系统调用都是Cancelation-point，
+   而其他pthread函数都不会引起Cancelation动作。但是pthread_cancel的手册页声称，由于LinuxThread库与C库结合得不好，因而目前C库函数都不是Cancelation-point；但CANCEL信号会使线程从阻塞的系统调用中退出，并置EINTR错误码，
+   因此可以在需要作为Cancelation-point的系统调用前后调用pthread_testcancel()，从而达到POSIX标准所要求的目标，即如下代码段：   
+   pthread_testcancel();   
+   retcode = read(fd, buffer,length);   
+   pthread_testcancel();
+    
   
   
   
