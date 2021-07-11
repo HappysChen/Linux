@@ -179,8 +179,34 @@ Mutex被创建时可以有初始值，表示Mutex被创建后，是锁定状态�
    1、写独占、读共享
    2、写锁优先级高、  
   
+4）、条件变量
+       与互斥锁不同，条件变量是用来等待而不是用来上锁的。条件变量用来自动阻塞一个线程，直到某特殊情况发生为止。通常条件变量和互斥锁同时使用。
+   条件变量使我们可以睡眠等待某种条件出现。条件变量是利用线程间共享的全局变量进行同步的一种机制，主要包括两个动作：一个线程等待"条件变量的条件成立"而挂起；
+   另一个线程使"条件成立"（给出条件成立信号）。条件的检测是在互斥锁的保护下进行的。如果一个条件为假，一个线程自动阻塞，并释放等待状态改变的互斥锁。
+   如果另一个线程改变了条件，它发信号给关联的条件变量，唤醒一个或多个等待它的线程，重新获得互斥锁，重新评价条件。如果两进程共享可读写的内存，条件变量可以被用来实现这两进程间的线程同步。
+   使用条件变量之前要先进行初始化。可以在单个语句中生成和初始化一个条件变量如：
+   pthread_cond_t my_condition=PTHREAD_COND_INITIALIZER;（用于进程间线程的通信）。
+   也可以利用函数pthread_cond_init动态初始化。
 
-  
+  1) pthread_cond_wait()函数
+     阻塞等待一个条件变量
+       int pthread_cond_wait(pthread_cond_t *restrict cond,pthread_mutex_t *restrict mutex);
+     函数作用：
+       1、阻塞等阿迪条件变量cond
+       2、释放已掌握的互斥锁（解锁互斥量）相当于pthread_mutex_unlock(&mutex);
+          1.2.两步为一个原子操作
+       3、当被唤醒，pthread_cond_wait()函数返回时，解除阻塞并重新申请获取互斥锁pthread_mutex_lock(&mutex);
+  2) pthread__cond_timewait函数
+    限时等待一个条件变量
+      int pthread_cond_timewait(pthread_cond_t * restrict cond,pthread_mutex_t *restrict mutex,const struct timespec *restrict abstime);
+         参数3：参看 man sem_timedwait函数，查看 struct_timespec结构体
+            struct timespec
+            {
+              time_t tv_sec;  //秒
+              long tv_nsec ;   //纳秒
+             }
+          形参abstime :绝对时间
+          
   
   
   
